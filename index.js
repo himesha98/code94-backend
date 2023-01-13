@@ -22,7 +22,11 @@ mongoose.connect(
 );
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 app.use(express.json());
-app.use(cors());
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+  });
 
 //app.use("/public", express.static("file-storage"));
 const storage = multer.diskStorage({
@@ -35,7 +39,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 app.post("/api/upload", upload.single("file"), (req, res) => {
-  console.log(req.body);
+
   try {
     return res.status(200).json("file uploaded succesfully");
   } catch (err) {
